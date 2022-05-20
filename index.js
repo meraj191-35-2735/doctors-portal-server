@@ -18,7 +18,6 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-    console.log("database connected");
     const serviceCollection = client
       .db("doctors_portal")
       .collection("services");
@@ -51,6 +50,13 @@ async function run() {
         service.available = available;
       });
       res.send(services);
+    });
+
+    app.get("/booking", async (req, res) => {
+      const patient = req.query.patient;
+      const query = { patient: patient };
+      const bookings = await bookingCollection.find(query).toArray();
+      res.send(bookings);
     });
     app.post("/booking", async (req, res) => {
       const booking = req.body;
